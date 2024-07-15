@@ -5,5 +5,6 @@ const{getAllWebBanners}= require('../../controllers/web_controllers/Banner_contr
 //----all routes----//
 
 router.get('/get/web/banners',getAllWebBanners)
+// router.get('/')
 
 module.exports=router

@@ -11,4 +11,17 @@ const getwebAllCategory=async(req,res)=>{
     }
 }
 
-module.exports={getwebAllCategory}
+//single category//
+const singleCategoryById= async(req,res)=>{
+    const id= req?.params?.id
+    console.log(id);
+    try {
+        const edit= await category_schema.findById(id)
+        res.status(200).send({status:true,message:"find category",data:edit})
+    } catch (error) {
+        res.status(500).send({message:"something went wrong !!"})
+    }
+}
+
+
+module.exports={getwebAllCategory,singleCategoryById}
