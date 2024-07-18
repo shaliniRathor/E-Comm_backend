@@ -50,9 +50,7 @@ const searchProducts= async(req,res)=>{
  
 const createproducts= async(req,res)=>{
     console.log("created ");
-    const create= new products_schema({
-     ...req.body
-    })
+    const create= new products_schema({...req.body})
     const result= await create.save()
     res.status(200).send({status:true,message:"create succesfully",data:result})
 

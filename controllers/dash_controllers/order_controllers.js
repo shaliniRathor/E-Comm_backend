@@ -1,5 +1,8 @@
 const order_schema = require('../../modals/orders_schema');
 
+const orderid = require('order-id')('key');
+
+
 
 //all Order controllers//
 
@@ -26,8 +29,11 @@ const searchOrder= async(req,res)=>{
  
 const createOrder= async(req,res)=>{
     console.log("created ");
+    console.log("bodyyy=>",req.body);
+    const order_id = orderid.generate();
     const create= new order_schema({
-     ...req.body
+     ...req.body,
+     order_id:order_id
     })
     const result= await create.save()
     res.status(200).send({status:true,message:"create succesfully",data:result})

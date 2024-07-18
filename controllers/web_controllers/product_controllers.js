@@ -42,4 +42,16 @@ const deleteWebproducts= async(req,res)=>{
 
 }
 
+// const createWebProducts=async(req,res)=>{
+//     try {
+//         const create= new products_schema({...req.body})
+//         const result= await create.save() 
+//         console.log(create);
+//        res.status(200).send({status:true, message:"product Created Succeefullu",data:result})
+//     } catch (error) {
+//         console.log("something went wrong", error);
+        
+//     }
+// }
+
 module.exports={getwebAllproducts,getIdsingleWebProduct,deleteWebproducts}

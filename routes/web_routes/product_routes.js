@@ -7,5 +7,6 @@ const {getwebAllproducts, getIdsingleWebProduct,deleteWebproducts}= require('../
 router.get('/all/web/products',getwebAllproducts)
 router.get('/single/products/:id',getIdsingleWebProduct)
 router.get('/delete/web/products/:id',deleteWebproducts)
+// router.post('/create/web/products',createWebProducts)
 
 module.exports= router
