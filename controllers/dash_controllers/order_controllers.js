@@ -1,3 +1,5 @@
+const Razorpay = require('razorpay');
+const crypto= require('crypto')
 const order_schema = require('../../modals/orders_schema');
 
 const orderid = require('order-id')('key');
@@ -57,4 +59,58 @@ const updateOrder= async(req,res)=>{
     
 }
 
-module.exports ={createOrder,deleteOrder,updateOrder,getAllOrder,searchOrder}
+//---------------payment gateway integration-------------//
+const paymentOrder= async(req,res)=>{
+    try {
+        const instance= new Razorpay({
+            key_id:process.env.KEY_ID,
+            key_secret:process.env.KEY_SECRET
+        });
+        const option={
+            amount:req.body.amount*100,
+            currency:'INR',
+        }
+        // let response = await instance.orders.create(option)
+        
+        await instance.orders.create(option,(error,order)=>{
+            if (error) {
+                console.log(error);
+              return  res.status(404).send({status:true,message:"something went wrong!!"})
+            } 
+            res.status(200).send({status:true,message:"Razorpay Order Crated Successfully",data:order})
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:'internal server error'})
+    }
+}
+
+//-----------payment verified---------------//
+
+const paymentVerified=async(req,res)=>{
+    try {
+        const{
+         razorpay_order_id,
+         razorpay_payment_id,
+         razorpay_signature  }= req.body
+     const sign= razorpay_order_id + '|' + razorpay_payment_id;
+      const expectedSign= crypto
+      .createHmac('sha256',process.env.KEY_SECRET)
+      .update(sign.toString())
+      .digest('hex')
+
+         if (razorpay_signature===expectedSign) {
+             return res.status(200).json({message:'payment verified successfully'})
+         } else{
+             return res.status(400).json({message:"invalid signature sent!!"})
+         }
+
+} catch (error) {
+ console.log(error);
+ res.status(500).json({message:'internal server error'})
+
+}
+}
+
+module.exports ={createOrder,deleteOrder,updateOrder,getAllOrder,searchOrder,paymentOrder,paymentVerified}
