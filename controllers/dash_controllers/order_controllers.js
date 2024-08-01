@@ -9,9 +9,23 @@ const orderid = require('order-id')('key');
 //all Order controllers//
 
 const getAllOrder= async(req,res)=>{
-    const find= await order_schema.find({})
+    let find;
+    const searchValue= req?.query?.searchdata
+    console.log("searchValue=>",searchValue);
+
+
+    //get all customer//
+    if (!searchValue) {
+     find= await order_schema.find({}).sort({ createdAt: -1 })
+        
+    } else {
+    const searchRegex= new RegExp(searchValue,'i')
+     find= await order_schema.find({customer_details:{$regex:searchRegex}})
+    
+}
+    res.status(200).send({status:true,message:"all order",data:find})
+
     console.log("all products=>",find);
-    res.status(200).send({status:true,message:"all Order",data:find})
 }
 
             //search//
@@ -40,6 +54,14 @@ const createOrder= async(req,res)=>{
     const result= await create.save()
     res.status(200).send({status:true,message:"create succesfully",data:result})
 
+}
+
+const getSingleOrder=async(req,res)=>{
+    const id=req?.params?.id
+    console.log(id);
+    const edit= await order_schema.findById(id)
+    console.log("edit=>",edit);
+    res.status(200).send({status:true,message:"single order found",data:edit})
 }
 
 const deleteOrder= async(req,res)=>{
@@ -113,4 +135,4 @@ const paymentVerified=async(req,res)=>{
 }
 }
 
-module.exports ={createOrder,deleteOrder,updateOrder,getAllOrder,searchOrder,paymentOrder,paymentVerified}
+module.exports ={createOrder,deleteOrder,updateOrder,getAllOrder,searchOrder,paymentOrder,paymentVerified,getSingleOrder}

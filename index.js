@@ -18,6 +18,7 @@ const admin_routes= require('./routes/dash_routes/admin_routes')
 const web_products_routes= require('./routes/web_routes/product_routes.js')
 const web_category_routes= require('./routes/web_routes/category_routes.js')
 const web_banners_routes= require('./routes/web_routes/banner_routes.js')
+const web_customer_routes= require('./routes/web_routes/customers_routes.js')
 
 app.use(cors())
 app.use(morgan("dev"))
@@ -37,6 +38,7 @@ app.use('/api',web_banners_routes)
 
 app.use('/api',web_products_routes)
 app.use('/api',web_category_routes)
+app.use('/api',web_customer_routes)
 
 app.get('/',(req,res)=>{
     res.send({message:"api is working"})

@@ -102,4 +102,6 @@ const updatecustomers= async(req,res)=>{
     
 }
 
+
+
 module.exports ={createcustomers,deletecustomers,updatecustomers,getAllcustomers,searchCustomers,getcustomerbyId}
