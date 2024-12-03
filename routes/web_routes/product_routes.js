@@ -1,6 +1,7 @@
 const express= require('express')
 const router= express.Router()
 const {getwebAllproducts, getIdsingleWebProduct,deleteWebproducts}= require('../../controllers/web_controllers/product_controllers')
+const { authCheckMiddleware } = require('../../middlewares/auth')
 
 //---------all-----------------//
 

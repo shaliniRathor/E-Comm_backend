@@ -13,7 +13,7 @@ const order_schema = new mongoose.Schema(
       email: String,
       address: String,
       zip_code: String,
-      city:String
+      city:String,
     },
     products: [
       {

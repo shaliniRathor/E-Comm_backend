@@ -4,6 +4,7 @@ const mongoose= require('mongoose')
 require('dotenv').config()
 const morgan= require('morgan')
 const cors= require('cors')
+const cookieparser= require('cookie-parser')
 
 //import dashboard routes=>//
 const banners_routes= require('./routes/dash_routes/banners_routes')
@@ -20,7 +21,8 @@ const web_category_routes= require('./routes/web_routes/category_routes.js')
 const web_banners_routes= require('./routes/web_routes/banner_routes.js')
 const web_customer_routes= require('./routes/web_routes/customers_routes.js')
 
-app.use(cors())
+app.use(cors({origin:true,credentials:true}))
+app.use(cookieparser())// cookie parser
 app.use(morgan("dev"))
 app.use(express.json());
 

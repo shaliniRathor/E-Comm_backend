@@ -5,23 +5,34 @@ const products_schema = require('../../modals/products_schema');
 
 const getAllproducts= async(req,res)=>{
   
+   try {
     let find;
     const searchValue= req?.query?.searchdata
+    const fiterstatus= req?.query?.statusFilter
     console.log("searchValue=>",searchValue);
+    console.log("stattusFilter=>",fiterstatus);
 
 
-    //get all customer//
-    if (!searchValue) {
-     find= await products_schema.find({})
+    //get all products//
+    if (searchValue) {
+        const searchRegex= new RegExp( searchValue,'i')
+        find= await products_schema.find({name:{$regex:searchRegex}} )
+    } 
+    else if (fiterstatus != "all") {
+         find= await products_schema.find({category:fiterstatus }) 
+         console.log("find Status====>>",find?.length);   
+        }   
+    else {
+        find= await products_schema.find({})  
         
-    } else {
-    const searchRegex= new RegExp(searchValue,'i')
-     find= await products_schema.find({product_name:{$regex:searchRegex}})
+    }
     
-}
     res.status(200).send({status:true,message:"all products",data:find})
 
     console.log("all products=>",find);
+   } catch (error) {
+     res.status(400).send("something went wrong !!")
+   }
 }
 
 
@@ -67,6 +78,10 @@ const deleteproducts= async(req,res)=>{
 const updateproducts= async(req,res)=>{
     console.log("updated successfully");
     const id= req.params.id
+
+    console.log("update body", req.body);
+    
+
     const updated= await products_schema.findByIdAndUpdate(id,{$set:{...req.body}})
     console.log("updated=>",updated);
     res.status(200).send({status:true,message:"updated sucessfully"})

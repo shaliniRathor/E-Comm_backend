@@ -27,6 +27,7 @@ const getIdsingleWebProduct= async(req,res)=>{
     const id= req?.params?.id
     console.log("idddd=>",id);
     try {
+        // const edit= await products_schema.findById({_id:id})
         const edit= await products_schema.findById(id)
         res.status(200).send({status:true,message:"find products",data:edit})
     } catch (error) {

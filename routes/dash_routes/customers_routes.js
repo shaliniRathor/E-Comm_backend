@@ -1,5 +1,6 @@
 const express= require('express')
 const { getAllcustomers,createcustomers,updatecustomers,deletecustomers, searchCustomers, getcustomerbyId, } = require('../../controllers/dash_controllers/customers_controllers')
+const { discount } = require('../../controllers/web_controllers/customer_controllers')
 const router= express.Router()
 
 
@@ -11,5 +12,6 @@ router.get('/search/customers/:search',searchCustomers)
 router.post('/create/new/customers',createcustomers)
 router.delete('/delete/customers/:id',deletecustomers)
 router.patch('/update/customers/:id',updatecustomers)
+router.post('discount',discount)
 
 module.exports= router

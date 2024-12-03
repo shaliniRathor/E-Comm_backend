@@ -7,24 +7,41 @@ const getAllcustomers= async(req,res)=>{
 
     let find;
     const searchValue= req?.query?.searchData
-
-// getting all customers//
-    if(!searchValue){
-        find= await customers_schema.find({})
-
-
-    }else{
-
-        //search//
+    const page= req?.query?.page ? parseInt(req?.query?.page) : 1
+    const limit= req?.query?.limit ? parseInt(req?.query?.limit) : 7
+    const startIndex= (page - 1) * limit
+    
+    // getting all customers//
+        if(!searchValue){
+                find= await customers_schema.find({}).sort({ createdAt: -1 }).limit(limit).skip(startIndex)
         
-        const searchRegex = new RegExp(searchValue,'i')
-        find= await customers_schema.find({customer_Name:{$regex:searchRegex}})
+        
+        
+        
+            }else{
+            
+                //search//
+        
+                const searchRegex = new RegExp(searchValue,'i')
+                find= await customers_schema.find({customer_Name:{$regex:searchRegex}}).sort({ createdAt: -1 }).limit(limit).skip(startIndex)
+        
+            }
 
-    }
+            // console.log()
 
-    console.log("all products=>",find);
-    res.status(200).send({status:true,message:"all customers",data:find})
+// find= await customers_schema.find({})
+
+const getAllcustomersCount= await  customers_schema.find({}).countDocuments()
+const getlimitcount= await getAllcustomersCount/limit
+console.log("count",getlimitcount);
+
+
+
+    console.log("all customer=>",find);
+    res.status(200).send({status:true,message:"all customers",data:find,totalCount:getAllcustomersCount,limitCount:getlimitcount})
 }
+
+// const ram= await customers_schema.findById({customer_Name}).then(function)                 
 
               //search//
 

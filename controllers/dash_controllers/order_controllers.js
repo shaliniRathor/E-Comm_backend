@@ -8,24 +8,104 @@ const orderid = require('order-id')('key');
 
 //all Order controllers//
 
-const getAllOrder= async(req,res)=>{
-    let find;
-    const searchValue= req?.query?.searchdata
-    console.log("searchValue=>",searchValue);
-
-
-    //get all customer//
-    if (!searchValue) {
-     find= await order_schema.find({}).sort({ createdAt: -1 })
+// const getAllOrder= async(req,res)=>{
+//     try {
         
-    } else {
-    const searchRegex= new RegExp(searchValue,'i')
-     find= await order_schema.find({customer_details:{$regex:searchRegex}})
-    
-}
-    res.status(200).send({status:true,message:"all order",data:find})
+//         let find;
+//         const searchValue= req?.query?.searchdata
+//         const fiterstatus= req?.query?.statusFilter
+//         console.log("searchValue=>",searchValue);
+//         console.log("status=>",fiterstatus);
 
-    console.log("all products=>",find);
+       
+// if (!searchValue) {
+//      find= await order_schema.find({}).sort({ createdAt: -1 })
+        
+//     }  
+//      else {
+//     const searchRegex= new RegExp(searchValue,'i')
+//      find= await order_schema.find({customer_details:{$regex:searchRegex}} 
+//    ) }
+        
+//     if (fiterstatus != "all") {
+//         find= await order_schema.find({remark:fiterstatus }) 
+//         console.log("find Status====>>",find?.length);
+//         return  res.status(200).send({status:true,message:"order patient", data:find, countemergency})   
+//        } 
+//      else {
+//             find= await patient_schema.find({})            
+//         }
+//         res.status(200).send({status:true,message:"all order", data:find})  
+
+//     } catch (error) {
+//         res.status(400).send("something went wrong !!")
+//     }
+//     //get all customer//
+//     // if (!searchValue) {
+//     //  find= await order_schema.find({}).sort({ createdAt: -1 })
+        
+//     // }  
+//     //  else {
+//     // const searchRegex= new RegExp(searchValue,'i')
+//     //  find= await order_schema.find({customer_details:{$regex:searchRegex}}
+
+//     //  if (fiterstatus != "all") {
+//     //     find=  order_schema.find({remark:fiterstatus }) 
+//     //     console.log("find Status====>>",find?.length);
+//     //     return  res.status(200).send({status:true,message:"Status order", data:find,})   
+//     //    } 
+       
+//     // else{
+//     //     find=  order_schema.find({})   
+//     // }   
+//     // res.status(200).send({status:true,message:"all order",data:find})
+    
+//     //     console.log("all products=>",find);
+
+
+
+// }
+
+const getAllOrder= async(req,res)=>{
+    try {
+        let find;
+        const searchValue= req?.query?.searchdata
+        const fiterstatus= req?.query?.statusFilter
+        const page= req?.query?.page ? parseInt(req?.query?.page) : 1
+        const limit=  req?.query?.limit ? parseInt(req?.query?.limit) : 7
+        const startIndex= (page - 1) * limit
+
+
+        console.log("search====>",searchValue);
+
+        if (searchValue) {
+            const searchRegex= new RegExp( searchValue,'i')
+            find= await order_schema.find({name:{$regex:searchRegex}} ).sort({createdAt:-1}).limit(limit).skip(startIndex)
+        } 
+        else if (fiterstatus != "all") {
+             find= await order_schema.find({order_status:fiterstatus }).sort({createdAt:-1}).limit(limit).skip(startIndex)
+             console.log("find Status====>>",find?.length);
+            //  return  res.status(200).send({status:true,message:"Status Order", data:find})   
+            } 
+     
+        else {
+            find= await order_schema.find({})  
+            
+        }
+
+        const getorderCount = await order_schema.find({}).countDocuments()
+        const getlimitCount= getorderCount/limit
+        console.log("order count",getlimitCount);
+        
+        
+        // console.log("find",find);
+        
+        res.status(200).send({status:true,message:"all order", data:find })  
+       
+        console.log("find===>",find);
+    } catch (error) {
+        res.status(400).send("something went wrong !!")
+    }
 }
 
             //search//

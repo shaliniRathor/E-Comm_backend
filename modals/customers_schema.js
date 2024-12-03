@@ -8,6 +8,7 @@ const customers_schema = new mongoose.Schema(
     address: String,
     zip_code: String,
     password: String,
+    disccount:String
   },
   { timestamps: true }
 );
